@@ -7,6 +7,7 @@
         <script src="js/app.js"></script>
         <title>My 1st Electron Application</title>
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     </head>
     
     <body ng-controller="MyController">
@@ -28,7 +29,11 @@
         
         <button class="btn btn-sm btn-block btn-warning" onclick="quitApplication()"> 
             <span class="glyphicon glyphicon-on-off"></span>Quit Application 
-        </button>        
+        </button>
+        
+        <button class="btn btn-sm btn-block btn-warning" onclick="openImage()"> 
+            <span class="glyphicon glyphicon-picture"></span>Open Image 
+        </button>                
         
         <h1>{{message}}</h1>
         
@@ -46,7 +51,10 @@
     <script>
         
         var remote = require('remote');
-        app = remote.require('app');
+        var app = remote.require('app');
+        var shell = require('shell');
+        var path = require('path');        
+        
         
         myWindow = remote.getCurrentWindow();
         var doFullScreen = function() {
@@ -63,6 +71,12 @@
         
         var quitApplication = function() {
             app.quit();
+        };
+        
+        var openImage = function() {
+            //var someFile = path.resolve("C:/Users/Fabien/Development/Javascript/LearningElectron/images/cave.png");
+            var someFile = path.resolve("./images/cave.png");
+            shell.openItem(someFile);  
         };
         
     </script>    
