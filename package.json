@@ -1,0 +1,19 @@
+{
+  "name": "ignis",
+  "version": "0.0.1",
+  "description": "a 2d game editor ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Fabien Steines",
+  "license": "ISC",
+  "devDependencies": {
+    "electron-prebuilt": "^0.37.7"
+  },
+  "dependencies": {
+    "angular": "^1.5.5",
+    "angular-route": "^1.5.5",
+    "bootstrap": "^3.3.6"
+  }
+}
