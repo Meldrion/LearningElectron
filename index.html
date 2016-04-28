@@ -40,40 +40,22 @@
     
     <script>
         
-        var remote = require('remote');
-        var app = remote.require('app');
-        var shell = require('shell');
-        var path = require('path');        
-        
-        
-        myWindow = remote.getCurrentWindow();
-        var doFullScreen = function() {
-            myWindow.setFullScreen(true);
-        };
-        
-        var exitFullScreen = function() {
-            myWindow.setFullScreen(false);
-        };
-        
-        var toggleDeveloperTool = function() {
-            myWindow.toggleDevTools();
-        };
-        
-        var quitApplication = function() {
-            app.quit();
-        };
-        
-        var openImage = function() {
-            //var someFile = path.resolve("C:/Users/Fabien/Development/Javascript/LearningElectron/images/cave.png");
-            var someFile = path.resolve("./images/cave.png");
-            shell.openItem(someFile);  
-        };
+        function IgnisMap(width,height) {
+            
+            this.width = width;
+            this.height = height;
+            
+            this.toString = function() {
+                return "Map Dimension: " + this.width + " * " + this.height; 
+            }
+            
+        }
         
         window.onload = function() {
 
             var game = new Phaser.Game(800 - 280, 600 - 80, 
                 Phaser.AUTO, "canvasArea", 
-                { preload: preload, create: create });
+                { preload: preload, create: create, update : update });
                 
             var chessTexture;
             
@@ -86,7 +68,12 @@
                 
                 var logo = game.add.sprite(game.world.centerX, game.world.centerY, "logo");
                 
-                generateChessTexture();         
+                generateChessTexture();    
+                var map1 = new IgnisMap(20,15);
+                var map2 = new IgnisMap(50,50);
+                
+                console.log(map1.toString());
+                console.log(map2.toString());    
             }
             
             function generateChessTexture() {
@@ -109,6 +96,10 @@
                 
             }
             
+            function update() {
+
+            }
+            
             window.onresize = function() {
                 
                 var renderArea = document.getElementById("renderArea"); 
@@ -116,11 +107,16 @@
                 var width = renderArea.clientWidth;
                 var height = renderArea.clientHeight;
                 
+                
+                if (game.renderType === Phaser.WEBGL) {	
+                    game.renderer.resize(width, height);
+                }
+                                
                 game.width = width;
                 game.height = height;          
-               
-                    
+                
             }
+            
                        
              
         };   
