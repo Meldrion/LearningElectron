@@ -26,6 +26,8 @@
             </div>
             
             <div id="renderArea">
+                <div id="canvasArea">
+                </div>
             </div>
                 
         </div>
@@ -67,23 +69,61 @@
             shell.openItem(someFile);  
         };
         
-    
-    window.onload = function() {
+        window.onload = function() {
 
-        var game = new Phaser.Game(800, 600, 
-            Phaser.AUTO, "renderArea", 
-            { preload: preload, create: create });
+            var game = new Phaser.Game(800 - 280, 600 - 80, 
+                Phaser.AUTO, "canvasArea", 
+                { preload: preload, create: create });
+                
+            var chessTexture;
+            
 
-        function preload () {
-            game.load.image("logo", "images/cave.png");
-        }
+            function preload () {
+                game.load.image("logo", "images/cave.png");
+            }
 
-        function create () {
-            var logo = game.add.sprite(game.world.centerX, game.world.centerY, "logo");
-            logo.anchor.setTo(0.5, 0.5);
-        }
-
-    };   
+            function create () {
+                
+                var logo = game.add.sprite(game.world.centerX, game.world.centerY, "logo");
+                
+                generateChessTexture();         
+            }
+            
+            function generateChessTexture() {
+                
+                // Create the chess texture
+                var graphics = game.add.graphics(0, 0);
+                
+                graphics.beginFill(0xFFFFFF);
+                graphics.drawRect(0, 0, 32, 32);
+                graphics.endFill();
+                
+                graphics.beginFill(0x666666);
+                graphics.drawRect(16, 0, 16, 16);
+                graphics.drawRect(0, 16, 16, 16);
+                graphics.endFill();      
+                
+                chessTexture = game.add.sprite(0, 0, graphics.generateTexture()); 
+                
+                graphics.destroy();                
+                
+            }
+            
+            window.onresize = function() {
+                
+                var renderArea = document.getElementById("renderArea"); 
+                
+                var width = renderArea.clientWidth;
+                var height = renderArea.clientHeight;
+                
+                game.width = width;
+                game.height = height;          
+               
+                    
+            }
+                       
+             
+        };   
         
     </script>    
     

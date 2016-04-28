@@ -5,7 +5,7 @@
     
     application.on('ready', function() {
         
-        var mainWindow = new BrowserWindow({width: 600, height: 300});
+        var mainWindow = new BrowserWindow({width:800, height:600});
         mainWindow.loadUrl('file://' + __dirname + '/index.html');
         mainWindow.on('closed', function() {
             mainWindow = null;
