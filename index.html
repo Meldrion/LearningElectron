@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="node_modules/phaser/build/phaser.min.js"></script>
+        <script src="js/ignis.js"></script>
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     </head>
     
@@ -39,89 +40,22 @@
     </body>
     
     <script>
-        
-        function IgnisMap(width,height) {
-            
-            this.width = width;
-            this.height = height;
-            
-            this.toString = function() {
-                return "Map Dimension: " + this.width + " * " + this.height; 
-            }
-            
-        }
-        
+        var ignisCanvas = null;
+
         window.onload = function() {
+            ignisCanvas = new IgnisCanvas("canvasArea","renderArea");
+            ignisCanvas.startCanvas();              
+        };
 
-            var game = new Phaser.Game(800 - 280, 600 - 80, 
-                Phaser.AUTO, "canvasArea", 
-                { preload: preload, create: create, update : update });
-                
-            var chessTexture;
+        window.onresize = function() {
             
-
-            function preload () {
-                game.load.image("logo", "images/cave.png");
-            }
-
-            function create () {
+            if (ignisCanvas) {
+                ignisCanvas.resizeCanvas();
+            } 
+                          
+        }
                 
-                var logo = game.add.sprite(game.world.centerX, game.world.centerY, "logo");
-                
-                generateChessTexture();    
-                var map1 = new IgnisMap(20,15);
-                var map2 = new IgnisMap(50,50);
-                
-                console.log(map1.toString());
-                console.log(map2.toString());    
-            }
-            
-            function generateChessTexture() {
-                
-                // Create the chess texture
-                var graphics = game.add.graphics(0, 0);
-                
-                graphics.beginFill(0xFFFFFF);
-                graphics.drawRect(0, 0, 32, 32);
-                graphics.endFill();
-                
-                graphics.beginFill(0x666666);
-                graphics.drawRect(16, 0, 16, 16);
-                graphics.drawRect(0, 16, 16, 16);
-                graphics.endFill();      
-                
-                chessTexture = game.add.sprite(0, 0, graphics.generateTexture()); 
-                
-                graphics.destroy();                
-                
-            }
-            
-            function update() {
-
-            }
-            
-            window.onresize = function() {
-                
-                var renderArea = document.getElementById("renderArea"); 
-                
-                var width = renderArea.clientWidth;
-                var height = renderArea.clientHeight;
-                
-                
-                if (game.renderType === Phaser.WEBGL) {	
-                    game.renderer.resize(width, height);
-                }
-                                
-                game.width = width;
-                game.height = height;          
-                
-            }
-            
-                       
-             
-        };   
-        
-    </script>    
+    </script>
     
 </html>
 
