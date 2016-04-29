@@ -1,96 +1,158 @@
-function IgnisMap(width,height) {
+'use strict';
+
+/******************************************************************
+ * GLOBALS 
+ ******************************************************************/
+
+function generateChessTexture(game) {
+    // Create the chess texture
     
-    this.width = width;
-    this.height = height;
+    var graphics = game.add.graphics(0, 0);
     
-    this.toString = function() {
-        return "Map Dimension: " + this.width + " * " + this.height; 
-    }
+    graphics.beginFill(0xFFFFFF);
+    graphics.drawRect(0, 0, 32, 32);
+    graphics.endFill();
     
+    graphics.beginFill(0xCCCCCC);
+    graphics.drawRect(16, 0, 16, 16);
+    graphics.drawRect(0, 16, 16, 16);
+    graphics.endFill();      
+    
+    var tex = graphics.generateTexture();
+    
+    graphics.destroy();                
+    return tex;
 }
 
-function IgnisCanvas(parentId,resizeListener) {
-    
-   this.parentId = parentId;
-   this.resizeListener = resizeListener;
-   this.game = null;
-   this.gameConfig = null;
-    
-   this.generateChessTexture = function () {
-        // Create the chess texture
-        var graphics = this.game.add.graphics(0, 0);
-        
-        graphics.beginFill(0xFFFFFF);
-        graphics.drawRect(0, 0, 32, 32);
-        graphics.endFill();
-        
-        graphics.beginFill(0x666666);
-        graphics.drawRect(16, 0, 16, 16);
-        graphics.drawRect(0, 16, 16, 16);
-        graphics.endFill();      
-        
-        chessTexture = this.game.add.sprite(0, 0, graphics.generateTexture()); 
-        
-        graphics.destroy();                
-    }
 
-    this.create = function () {
-        var logo = this.game.add.sprite(10,0, "logo");
-
-        //this.generateChessTexture();    
-        var map1 = new IgnisMap(20,15);
-        var map2 = new IgnisMap(50,50);
-        
-        console.log(map1.toString());
-        console.log(map2.toString());    
-    }
-
-    this.preload = function () {
-        this.game.load.image("logo", "images/cave.png");
-    }
+/******************************************************************
+ * OOP
+******************************************************************/
+function IgnisGameLevel(game,name,cellSize,tileWidth,tileHeight) {
     
-    this.update = function() {
-
-    }
+    var game = game;
+    var name = name;
+    var cellSize = cellSize;
+    var tileWidth = tileWidth;
+    var tileHeight = tileHeights;
+    var chessTexture = generateChessTexture();
     
-    /*
-        Create the PhaserJS Canvas 
-     */
-    this.startCanvas = function() {
-        // Config for the PhaserJS Canvas
-        this.gameConfig = { 
-                            preload: this.preload, 
-                            create: this.create, 
-                            update : this.update 
-                     };
+    //var tilemap = new Tilemap(gameRef, null, cellSize, cellSize, tileWidth, tileHeight);
+            
+}
+
+/******************************************************************
+ ** MAIN CANVAS
+ ******************************************************************/
+function IgnisCanvas(id,listener) {
+    
+   var parentId = id;
+   var resizeListener = listener;
+   
+   var game = null;
+   var gameConfig = 
+                 { 
+                    preload: preload, 
+                    create: create, 
+                    update : update 
+                 };
+                 
+   var currentMap = null;                             
+   var chessTexture = null;  
+                 
+   // public methods have access to private members
+   this.setParendId = function(id) {
+       parentId = id;
+   }
+
+   this.getParendId = function() {
+        return parentId;
+   }
+   
+   this.setResizeListener = function(listener) {
+       resizeListener = listener;
+   }
+
+   this.getResizeListener = function() {
+        return resizeListener;
+   }
+   
+   this.setGame = function(g) {
+       game = g;
+   }
+
+   this.getGame = function() {
+        return game;
+   }      
+   
+   this.getGameConfig = function() {
+       return gameConfig;
+   }       
+   
+   this.invalidateBackground = function() {
+       
+       game.world.removeAll();
+       
+       var maxX = game.width / 32;
+       var maxY = game.height / 32;
+       
+       for (var x=0;x <= maxX; x++) {
+           for (var y=0;y <= maxY; y++) {
+                game.add.sprite(x*32,y*32,chessTexture);    
+           }           
+       }
+   }       
+
+   function create() {
+       //currentMap = new Tilemap(game);   
+   }
+    
+   function preload() {
+       game.stage.backgroundColor = "#999999";
+       chessTexture = generateChessTexture(game);
+        //game.load.image("tileset", "images/cave.png");
+   }
+    
+   function update() {
+            
+   }
+            
+}
+
+
+/*
+    Create the PhaserJS Canvas 
+*/
+IgnisCanvas.prototype.startCanvas = function() {
         
-        // Get container                  
-        var renderArea = document.getElementById(this.resizeListener); 
+    // Get container                  
+    var renderArea = document.getElementById(this.getResizeListener()); 
+    
+    // Container Size
+    var width = renderArea.clientWidth;
+    var height = renderArea.clientHeight;
+                                    
+    this.setGame(new Phaser.Game(width,height, Phaser.AUTO, this.getParendId(), this.getGameConfig() ));       
+}
+
+IgnisCanvas.prototype.resizeCanvas = function() {
         
-        // Container Size
+    var game = this.getGame();        
+    if (game) {
+            
+        var renderArea = document.getElementById(this.getResizeListener()); 
+        
         var width = renderArea.clientWidth;
         var height = renderArea.clientHeight;
-                                      
-        this.game = new Phaser.Game(width,height, Phaser.AUTO, this.parentId, this.gameConfig);       
-    }
-    
-    this.resizeCanvas = function() {
+                                        
+        game.width = width;
+        game.height = height;            
         
-        if (this.game) {
-            
-            var renderArea = document.getElementById(this.resizeListener); 
-            
-            var width = renderArea.clientWidth;
-            var height = renderArea.clientHeight;
-            
-            
-            if (this.game.renderType === Phaser.WEBGL) {	
-                this.game.renderer.resize(width, height);
-            }      
-                            
-            this.game.width = width;
-            this.game.height = height;            
+        if (game.renderType === Phaser.WEBGL) {	
+            game.renderer.resize(width, height);
         }
         
-    }    
+        this.invalidateBackground();      
+              
+    }
 }
