@@ -10,7 +10,12 @@
         <link rel="stylesheet" href="css/main.css">
         <script src="node_modules/phaser/build/phaser.min.js"></script>
         <script src="js/ignis.js"></script>
+        <script src="node_modules/jquery/dist/jquery.min.js" 
+                onload="window.$ = window.jQuery = module.exports;">
+        </script>
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+     
+    
     </head>
     
     
@@ -41,7 +46,9 @@
     
     <script>
         var ignisCanvas = null;
-
+        
+        
+            
         window.onload = function() {
             ignisCanvas = new IgnisCanvas("canvasArea","renderArea");
             ignisCanvas.startCanvas();              
@@ -54,6 +61,11 @@
             } 
                           
         }
+        
+        /* JQUERY WORKS FINALLY */
+        $(document).ready(function(){
+
+        }); 
                 
     </script>
     

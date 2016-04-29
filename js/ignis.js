@@ -58,7 +58,8 @@ function IgnisCanvas(id,listener) {
                  };
                  
    var currentMap = null;                             
-   var chessTexture = null;  
+   var chessTexture = null;
+   var cursor = null;  
                  
    // public methods have access to private members
    this.setParendId = function(id) {
@@ -87,10 +88,9 @@ function IgnisCanvas(id,listener) {
    
    this.getGameConfig = function() {
        return gameConfig;
-   }       
+   }  
    
-   this.invalidateBackground = function() {
-       
+   function invalidateBackground() {
        game.world.removeAll();
        
        var maxX = game.width / 32;
@@ -101,10 +101,20 @@ function IgnisCanvas(id,listener) {
                 game.add.sprite(x*32,y*32,chessTexture);    
            }           
        }
+       
+       // Create the Cursor
+       cursor = game.add.graphics();
+       cursor.lineStyle(2, 0x000000, 1);
+       cursor.drawRect(0, 0, 32, 32);              
+   }     
+   
+   this.invalidateBackground = function() {
+       invalidateBackground();
    }       
 
    function create() {
-       //currentMap = new Tilemap(game);   
+       //currentMap = new Tilemap(game);
+       invalidateBackground();          
    }
     
    function preload() {
@@ -114,7 +124,10 @@ function IgnisCanvas(id,listener) {
    }
     
    function update() {
-            
+              
+       cursor.x = Math.floor(game.input.activePointer.x / 32) * 32;
+       cursor.y = Math.floor(game.input.activePointer.y / 32) * 32;
+
    }
             
 }
